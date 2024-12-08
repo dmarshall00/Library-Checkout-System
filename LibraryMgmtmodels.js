@@ -1,7 +1,7 @@
 const { Sequelize, DataTypes } = require('sequelize');
 
 // Initialize Sequelize connection
-const sequelize = new Sequelize('library_mgmt', 'root', 'Ejbsy051cab', { 
+const sequelize = new Sequelize('library_mgmt', 'root', 'Use_your_own_password', { 
   host: 'localhost',
   dialect: 'mysql'
 });
