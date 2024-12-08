@@ -2,35 +2,32 @@ CREATE DATABASE IF NOT EXISTS library_mgmt;
 
 USE library_mgmt;
 
--- Create the Books table in library_mgmt (this will not affect the other database's Books table)
-CREATE TABLE IF NOT EXISTS Books (
-    isbn VARCHAR(20) PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    author VARCHAR(255),
-    translator VARCHAR(255),
-    format VARCHAR(50),
-    pages INT,
-    publisher VARCHAR(255),
-    published DATE,
-    year INT,
-    votes INT,
-    rating FLOAT
+CREATE TABLE Books (
+    isbn VARCHAR(20) PRIMARY KEY,      -- ISBN as the primary key
+    title VARCHAR(255) NOT NULL,       -- Title of the book
+    author VARCHAR(255),               -- Author of the book
+    translator VARCHAR(255),           -- Translator (if applicable)
+    book_format VARCHAR(50),           -- Format (e.g., hardcover, paperback)
+    pages INT,                         -- Number of pages
+    publisher VARCHAR(255),            -- Publisher's name
+    published DATE,                    -- Date of publication
+    book_year INT,                     -- Year of publication
+    votes INT,                         -- Number of votes
+    rating FLOAT                       -- Average rating
 );
 
--- Create Students table
-CREATE TABLE IF NOT EXISTS Students (
-    student_id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    `group` VARCHAR(5)
+CREATE TABLE Students (
+    student_id INT AUTO_INCREMENT PRIMARY KEY,    -- Student ID as primary key
+    student_name VARCHAR(255) NOT NULL,            -- Student's full name
+    student_group VARCHAR(5)                       -- Student's group/class
 );
 
--- Create Checkouts table in library_mgmt
-CREATE TABLE IF NOT EXISTS Checkouts (
-    checkout_id INT AUTO_INCREMENT PRIMARY KEY,
-    student_id INT,
-    book_id VARCHAR(20),
-    checkout_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-    return_date DATE,
-    FOREIGN KEY (student_id) REFERENCES Students(student_id),
-    FOREIGN KEY (book_id) REFERENCES Books(isbn)  -- Books table in the same library_mgmt database
+CREATE TABLE Checkouts (
+    checkout_id INT AUTO_INCREMENT PRIMARY KEY,   -- Checkout ID as primary key
+    student_id INT,                               -- Foreign key referencing Students
+    book_isbn VARCHAR(20),                        -- Foreign key referencing Books
+    checkout_date DATE,                           -- Date when the book was checked out
+    return_date DATE,                             -- Date when the book was returned (NULL if not returned yet)
+    FOREIGN KEY (student_id) REFERENCES Students(student_id),  -- Foreign key constraint for student_id
+    FOREIGN KEY (book_isbn) REFERENCES Books(isbn)           -- Foreign key constraint for book_isbn
 );
