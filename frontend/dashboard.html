@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="main-bg-1"></div>
+<div class="main-bg-2"></div>
+
+<header>
+    <h1>Welcome, <span id="user-name"></span>!</h1>
+</header>
+
+<main>
+    <div class="dashboard-container">
+        <h2>Menu</h2>
+
+        <div class="menu-options">
+            <a href="../backend/add-book.php" class="button">Add Book</a>
+            <a href="../backend/checkout-book.php" class="button">Checkout Book</a>
+            <a href="../backend/return-book.php" class="button">Return Book</a>
+            <a href="../backend/register.php" class="button">Register</a>
+            <a href="../backend/logout.php" class="button">Logout</a>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <p>&copy; 2024 Bowie State University</p>
+</footer>
+
+<script src="script.js" defer></script>
+
+<script>
+    document.getElementById("user-name").textContent = '<%= username %>';
+  </script>  
+
+</body>
+</html>

@@ -1,0 +1,36 @@
+{
+  "name": "library-checkout-system",
+  "version": "1.0.0",
+  "description": "This library management system displays students assigned specific books in a class, allowing retrieval of data about students, books, and group assignments using a MySQL backend integrated with Sequelize and Express.js APIs.",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js",
+    "dev": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "library",
+    "management",
+    "system",
+    "sequelize",
+    "express",
+    "mysql"
+  ],
+  "author": "Your Name",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "mysql2": "^3.11.5",
+    "prompt-sync": "^4.2.0",
+    "sequelize": "^6.37.5"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
