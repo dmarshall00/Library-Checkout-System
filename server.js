@@ -11,6 +11,7 @@ app.use(express.static("./frontend"));
 
 // Set up sessions
 app.use(session({
+  SESSION_SECRET=your_secure_random_secret
   secret: process.env.SESSION_SECRET || '085gbjgd568%%$dS', // Use an env variable for better security
   resave: false,
   saveUninitialized: true,
