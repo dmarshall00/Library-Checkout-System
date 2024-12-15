@@ -29,7 +29,7 @@
   </div>
 
   <script>
-    // Function to search for a student by ID or name
+    // Function to search for a student by name
     function searchStudent() {
       const studentName = document.getElementById("student-name").value.trim();
 
@@ -59,29 +59,37 @@
         });
     }
 
-    // Function to search for a book by title
-    async function searchBook() {
-      console.log('Search for book triggered');  // Debugging log
-      const title = document.getElementById('bookSearchInput').value;
+    // Function to search for a book and show students who borrowed it
+    function searchBook() {
+      const title = document.getElementById('bookSearchInput').value.trim();
 
       if (!title) {
-        console.log('No input provided');  // Debugging log
+        alert("Please enter a book title.");
         return;
       }
 
-      const response = await fetch(`http://localhost:3000/search/book?title=${title}`);
-
-      if (response.status === 404) {
-        document.getElementById('results').innerHTML = '<p>Book not found.</p>';
-        return;
-      }
-
-      const book = await response.json();
-      console.log('Book data:', book);  // Debugging log
-      displayResults([book], 'Book');
+      fetch(`http://localhost:3000/search/book?title=${encodeURIComponent(title)}`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error("Book not found.");
+          }
+          return response.json();
+        })
+        .then(data => {
+          if (data.message) {
+            alert(data.message); // Display the message to the user
+          } else {
+            console.log("Book Data:", data);
+            displayResults([data], 'Book');
+          }
+        })
+        .catch(error => {
+          console.error("Error:", error);
+          alert("Error: " + error.message);
+        });
     }
 
-    // Function to display results
+    // Function to display results (students who borrowed the book)
     function displayResults(items, type) {
       const resultsDiv = document.getElementById('results');
       resultsDiv.innerHTML = ''; // Clear previous results
@@ -91,30 +99,28 @@
         div.classList.add('result-item');
 
         if (type === 'Student') {
-          console.log("Student Data:", item); // Log full student data
           div.innerHTML = `
             <strong>Name:</strong> ${item.student_name} <br>
             <strong>Group:</strong> ${item.student_group} <br>
             <strong>Borrowed Books:</strong>
             <ul>
-              ${item.Checkouts && item.Checkouts.length > 0 ? item.Checkouts.map((checkout, index) => {
-                console.log(`Checkout #${index}:`, checkout); // Log each checkout
-                const bookTitle = checkout.book_title || 'Unknown Book';  // Using pre-formatted book_title
-                const bookAuthor = checkout.book_author || 'Unknown Author';  // Using pre-formatted book_author
-                const dueDate = checkout.return_date || 'No due date';
+              ${item.Checkouts.map(checkout => {
+                const bookTitle = checkout.Book ? checkout.Book.title : 'Unknown Book';
+                const bookAuthor = checkout.Book ? checkout.Book.author : 'Unknown Author';
+                const dueDate = checkout.return_date ? checkout.return_date : 'No due date';
                 return `<li>${bookTitle} by ${bookAuthor} (Due: ${dueDate})</li>`;
-              }).join('') : '<li>No books checked out</li>'}
+              }).join('')}
             </ul>
           `;
         } else if (type === 'Book') {
           div.innerHTML = `
             <strong>Title:</strong> ${item.book_title} <br>
             <strong>Author:</strong> ${item.book_author} <br>
-            <strong>Borrowers:</strong>
+            <strong>Students Who Borrowed:</strong>
             <ul>
-              ${item.Checkouts && item.Checkouts.length > 0 ? item.Checkouts.map(checkout => `
-                <li>${checkout.Student.student_name} (Group: ${checkout.Student.student_group})</li>
-              `).join('') : '<li>No borrowers</li>'}
+              ${item.Checkouts.map(checkout => `
+                <li>${checkout.student_name} (Group: ${checkout.student_group}, Checkout Date: ${checkout.checkout_date}, Due Date: ${checkout.return_date})</li>
+              `).join('')}
             </ul>
           `;
         }
