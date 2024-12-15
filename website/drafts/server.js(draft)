@@ -113,6 +113,39 @@ app.get('/search/book', async (req, res) => {
       res.status(500).json({ message: "An error occurred. Please try again." });
     }
   });
+
+  // Route for listing all students
+app.get('/students', async (req, res) => {
+    try {
+      const students = await Student.findAll({
+        include: [{
+          model: Checkout,
+          include: [Book]
+        }]
+      });
+  
+      const formattedStudents = students.map(student => ({
+        student_id: student.student_id,
+        student_name: student.student_name,
+        student_group: student.student_group,
+        Checkouts: student.Checkouts.map(checkout => {
+          const book = checkout.Book || {};  // Prevent null errors
+          return {
+            checkout_id: checkout.checkout_id,
+            checkout_date: checkout.checkout_date,
+            return_date: checkout.return_date,
+            book_title: book.title || 'Unknown Book',
+            book_author: book.author || 'Unknown Author'
+          };
+        })
+      }));
+  
+      res.json(formattedStudents);  // Sending the list of all students
+    } catch (error) {
+      console.error('Error fetching students:', error);
+      res.status(500).json({ message: 'An error occurred while fetching students.' });
+    }
+  });
   
 
 // Start the server
