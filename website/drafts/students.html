@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Students - Library Management System</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    h1 { text-align: center; }
+    .container { margin: 20px auto; max-width: 800px; }
+    .student-item { border-bottom: 1px solid #ddd; padding: 10px 0; }
+    .back-button { margin-top: 20px; display: inline-block; padding: 10px 20px; background-color: #007BFF; color: white; text-decoration: none; border-radius: 5px; }
+  </style>
+</head>
+<body>
+
+  <h1>All Students</h1>
+  <div class="container" id="student-list">
+    <!-- Student list will be populated here -->
+  </div>
+  
+  <a href="index.html" class="back-button">Back to Home</a>
+
+  <script>
+    // Fetch all students
+    fetch('http://localhost:3000/students')
+      .then(response => response.json())
+      .then(data => {
+        const studentList = document.getElementById('student-list');
+        data.forEach(student => {
+          const studentDiv = document.createElement('div');
+          studentDiv.classList.add('student-item');
+
+          studentDiv.innerHTML = `
+            <strong>Name:</strong> ${student.student_name} <br>
+            <strong>Group:</strong> ${student.student_group} <br>
+            <strong>Borrowed Books:</strong>
+            <ul>
+              ${student.Checkouts.map(checkout => {
+                const bookTitle = checkout.book_title || 'Unknown Book';
+                const bookAuthor = checkout.book_author || 'Unknown Author';
+                const dueDate = checkout.return_date || 'No due date';
+                return `<li>${bookTitle} by ${bookAuthor} (Due: ${dueDate})</li>`;
+              }).join('')}
+            </ul>
+          `;
+
+          studentList.appendChild(studentDiv);
+        });
+      })
+      .catch(error => console.error('Error fetching students:', error));
+  </script>
+
+</body>
+</html>
