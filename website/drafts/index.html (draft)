@@ -14,7 +14,11 @@
 </head>
 <body>
 
-  <h1>Library Management System</h1>
+  <h1>Library Management System</h1> 
+
+  <!-- Add this above the search bar -->
+    <button onclick="window.location.href='students.html'">View All Students</button>
+
 
   <div class="container">
     <h2>Search Books</h2>
