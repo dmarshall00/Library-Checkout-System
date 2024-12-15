@@ -8,14 +8,17 @@
     body { font-family: Arial, sans-serif; padding: 20px; }
     h1 { text-align: center; }
     .container { margin: 20px auto; max-width: 800px; }
-    .result-item { border-bottom: 1px solid #ddd; padding: 10px 0; }
+    .result-item { border-bottom: 1px solid #ddd; padding: 10px 0; } 
+    .back-button { margin-top: 20px; display: inline-block; padding: 10px 20px; background-color: #007BFF; color: white; text-decoration: none; border-radius: 5px; }
   </style>
 </head>
 <body>
 
   <h1>All Books and Borrowers</h1>
 
-  <div class="container" id="bookResults"></div>
+  <div class="container" id="bookResults"></div> 
+
+  <a href="index.html" class="back-button">Back to Home</a>
 
   <script>
     // Function to fetch and display all books and their borrowers
