@@ -17,8 +17,8 @@
   <h1>Library Management System</h1> 
 
   <!-- Add this above the search bar -->
-    <button onclick="window.location.href='students.html'">View All Students</button>
-
+    <button onclick="window.location.href='students.html'">View All Students</button> 
+    <button onclick="window.location.href='books.html'">View All Books</button> <!-- Button for viewing all books -->
 
   <div class="container">
     <h2>Search Books</h2>
