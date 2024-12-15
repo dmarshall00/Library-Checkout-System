@@ -15,19 +15,18 @@ app.use(express.static(path.join(__dirname, 'library_system')));
 app.get('/search/student', async (req, res) => {
     try {
       const studentName = req.query.name.trim();
-      console.log("Searching for student:", studentName);  // Debugging line
+      console.log("Searching for student:", studentName);  // Debugging line 
   
       const student = await Student.findOne({
-        where: {
-          student_name: {
-            [Op.like]: `%${studentName}%`
-          }
-        },
-        include: {
+        where: { student_name: { [Op.like]: `%${studentName}%` } },
+        include: [{
           model: Checkout,
-          include: [Book]
-        }
+          include: [{
+            model: Book
+          }]
+        }]
       });
+      
   
       if (!student) {
         return res.json({ message: "Student not found." });
