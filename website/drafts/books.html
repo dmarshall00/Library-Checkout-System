@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Books</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    h1 { text-align: center; }
+    .container { margin: 20px auto; max-width: 800px; }
+    .result-item { border-bottom: 1px solid #ddd; padding: 10px 0; }
+  </style>
+</head>
+<body>
+
+  <h1>All Books and Borrowers</h1>
+
+  <div class="container" id="bookResults"></div>
+
+  <script>
+    // Function to fetch and display all books and their borrowers
+    async function fetchBooks() {
+      const response = await fetch('http://localhost:3000/listBooks');
+      const books = await response.json();
+
+      const bookResultsDiv = document.getElementById('bookResults');
+      bookResultsDiv.innerHTML = '';  // Clear any previous content
+
+      books.forEach(book => {
+        const div = document.createElement('div');
+        div.classList.add('result-item');
+
+        div.innerHTML = `
+          <strong>Title:</strong> ${book.title} <br>
+          <strong>Author:</strong> ${book.author} <br>
+          <strong>Borrowers:</strong>
+          <ul>
+            ${book.checkouts.map(checkout => `
+              <li>${checkout.student_name} (Group: ${checkout.student_group}, Due: ${checkout.return_date})</li>
+            `).join('')}
+          </ul>
+        `;
+
+        bookResultsDiv.appendChild(div);
+      });
+    }
+
+    // Call the fetchBooks function when the page loads
+    fetchBooks();
+  </script>
+
+</body>
+</html>
