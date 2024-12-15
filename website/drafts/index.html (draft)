@@ -82,50 +82,46 @@
     }
 
     // Function to display results
-    // Function to display results
-function displayResults(items, type) {
-  const resultsDiv = document.getElementById('results');
-  resultsDiv.innerHTML = ''; // Clear previous results
+    function displayResults(items, type) {
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = ''; // Clear previous results
 
-  items.forEach(item => {
-    const div = document.createElement('div');
-    div.classList.add('result-item');
+      items.forEach(item => {
+        const div = document.createElement('div');
+        div.classList.add('result-item');
 
-    if (type === 'Student') {
-      div.innerHTML = `
-        <strong>Name:</strong> ${item.student_name} <br>
-        <strong>Group:</strong> ${item.student_group} <br>
-        <strong>Borrowed Books:</strong>
-        <ul>
-          ${item.Checkouts.map(checkout => {
-            // Add a check for checkout.Book being undefined
-            if (checkout.Book) {
-              return `
-                <li>${checkout.Book.title} by ${checkout.Book.author} (Due: ${checkout.return_date})</li>
-              `;
-            } else {
-              return `<li>Unknown Book (Due: ${checkout.return_date})</li>`;
-            }
-          }).join('')}
-        </ul>
-      `;
-    } else if (type === 'Book') {
-      div.innerHTML = `
-        <strong>Title:</strong> ${item.title} <br>
-        <strong>Author:</strong> ${item.author} <br>
-        <strong>Borrowers:</strong>
-        <ul>
-          ${item.Checkouts.map(checkout => `
-            <li>${checkout.Student.student_name} (Group: ${checkout.Student.student_group})</li>
-          `).join('')}
-        </ul>
-      `;
+        if (type === 'Student') {
+          console.log("Student Data:", item); // Log full student data
+          div.innerHTML = `
+            <strong>Name:</strong> ${item.student_name} <br>
+            <strong>Group:</strong> ${item.student_group} <br>
+            <strong>Borrowed Books:</strong>
+            <ul>
+              ${item.Checkouts && item.Checkouts.length > 0 ? item.Checkouts.map((checkout, index) => {
+                console.log(`Checkout #${index}:`, checkout); // Log each checkout
+                const bookTitle = checkout.book_title || 'Unknown Book';  // Using pre-formatted book_title
+                const bookAuthor = checkout.book_author || 'Unknown Author';  // Using pre-formatted book_author
+                const dueDate = checkout.return_date || 'No due date';
+                return `<li>${bookTitle} by ${bookAuthor} (Due: ${dueDate})</li>`;
+              }).join('') : '<li>No books checked out</li>'}
+            </ul>
+          `;
+        } else if (type === 'Book') {
+          div.innerHTML = `
+            <strong>Title:</strong> ${item.book_title} <br>
+            <strong>Author:</strong> ${item.book_author} <br>
+            <strong>Borrowers:</strong>
+            <ul>
+              ${item.Checkouts && item.Checkouts.length > 0 ? item.Checkouts.map(checkout => `
+                <li>${checkout.Student.student_name} (Group: ${checkout.Student.student_group})</li>
+              `).join('') : '<li>No borrowers</li>'}
+            </ul>
+          `;
+        }
+
+        resultsDiv.appendChild(div);
+      });
     }
-
-    resultsDiv.appendChild(div);
-  });
-}
-
   </script>
 
 </body>
