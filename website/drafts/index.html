@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Library Management System</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    h1 { text-align: center; }
+    .container { margin: 20px auto; max-width: 600px; }
+    .results { margin-top: 20px; }
+    .result-item { border-bottom: 1px solid #ddd; padding: 10px 0; }
+    button { padding: 10px; margin: 5px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+    button:hover { background-color: #45a049; }
+  </style>
+</head>
+<body>
+
+  <!-- Display welcome message after user logs in -->
+  <h1>Library Management System</h1>
+  <div id="welcomeMessage"></div>
+  
+  <!-- Logout button -->
+  <button onclick="logout()">Logout</button> 
+
+  <button onclick="window.location.href='students.html'">View All Students</button> 
+    <button onclick="window.location.href='books.html'">View All Books</button> <!-- Button for viewing all books -->
+
+
+  <div class="container">
+    <h2>Search Books</h2>
+    <input type="text" id="bookSearchInput" placeholder="Enter book title">
+    <button onclick="searchBook()">Search</button>
+
+    <h2>Search Students</h2>
+    <input type="text" id="student-name" placeholder="Enter student name">
+    <button onclick="searchStudent()">Search Student</button>
+
+    <div class="results" id="results"></div>
+  </div>
+
+  <script>
+    // Check if the user is logged in
+    window.onload = function() {
+      const user = sessionStorage.getItem("loggedInUser");
+      if (!user) {
+        window.location.href = "login.html";  // Redirect to login if not logged in
+      } else {
+        const parsedUser = JSON.parse(user);
+        document.getElementById("welcomeMessage").textContent = `Welcome, ${parsedUser.name}!`;
+      }
+    }
+
+    // Logout function
+    function logout() {
+      sessionStorage.removeItem("loggedInUser");
+      window.location.href = "login.html";
+    }
+
+    // Function to search for a student by ID or name
+    function searchStudent() {
+      const studentName = document.getElementById("student-name").value.trim();
+
+      if (studentName === "") {
+        alert("Please enter a student name.");
+        return;
+      }
+
+      fetch(`http://localhost:3000/search/student?name=${encodeURIComponent(studentName)}`)
+        .then(response => response.json())
+        .then(data => {
+          displayResults([data], 'Student');
+        })
+        .catch(error => {
+          alert("Error: " + error.message);
+        });
+    }
+
+    // Function to search for a book by title
+    async function searchBook() {
+      const title = document.getElementById('bookSearchInput').value;
+
+      if (!title) {
+        return;
+      }
+
+      const response = await fetch(`http://localhost:3000/search/book?title=${title}`);
+      const book = await response.json();
+      console.log(book);
+      displayResults([book], 'Book');
+    }
+
+    // Function to display results
+    function displayResults(items, type) { 
+  const user = JSON.parse(sessionStorage.getItem("loggedInUser"));
+
+  const resultsDiv = document.getElementById('results');
+  resultsDiv.innerHTML = '';  // Clear previous results
+
+  items.forEach(item => {
+    const div = document.createElement('div');
+    div.classList.add('result-item');
+
+    if (type === 'Student') {
+      div.innerHTML = `
+        <strong>Name:</strong> ${item.student_name} <br>
+        <strong>Group:</strong> ${item.student_group} <br>
+        <strong>Borrowed Books:</strong>
+        <ul>
+          ${item.Checkouts.map(checkout => {
+            // Check if book data exists and is valid
+            const bookTitle = checkout.book_title || 'Unknown Book';
+            const bookAuthor = checkout.book_author || 'Unknown Author';
+            const dueDate = checkout.return_date || 'No due date';
+            return `<li>${bookTitle} by ${bookAuthor} (Due: ${dueDate})</li>`;
+          }).join('')}
+        </ul>
+      `;
+    } else if (type === 'Book') {
+      div.innerHTML = `
+        <strong>Title:</strong> ${item.book_title} <br>
+        <strong>Author:</strong> ${item.book_author} <br>
+        <strong>Students Who Borrowed:</strong>
+        <ul>
+          ${item.Checkouts.map(checkout => `
+            <li>${checkout.student_name} (Group: ${checkout.student_group}, Checkout Date: ${checkout.checkout_date}, Due Date: ${checkout.return_date})</li>
+          `).join('')}
+        </ul>
+      `;
+    }
+
+    resultsDiv.appendChild(div);
+  });
+}
+
+
+  </script>
+
+</body>
+</html>
