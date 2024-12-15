@@ -44,10 +44,10 @@
     window.onload = function() {
       const user = sessionStorage.getItem("loggedInUser");
       if (!user) {
-        window.location.href = "login.html";  // Redirect to login if not logged in
+            window.location.href = "login.html";  // Redirect to login if not logged in
       } else {
-        const parsedUser = JSON.parse(user);
-        document.getElementById("welcomeMessage").textContent = `Welcome, ${parsedUser.name}!`;
+            const parsedUser = JSON.parse(user);
+            document.getElementById("welcomeMessage").textContent = `Welcome, ${parsedUser.name}!`;
       }
     }
 
@@ -62,8 +62,8 @@
       const studentName = document.getElementById("student-name").value.trim();
 
       if (studentName === "") {
-        alert("Please enter a student name.");
-        return;
+            alert("Please enter a student name.");
+            return;
       }
 
       fetch(`http://localhost:3000/search/student?name=${encodeURIComponent(studentName)}`)
@@ -92,48 +92,45 @@
 
     // Function to display results
     function displayResults(items, type) { 
-  const user = JSON.parse(sessionStorage.getItem("loggedInUser"));
+        const user = JSON.parse(sessionStorage.getItem("loggedInUser"));
 
-  const resultsDiv = document.getElementById('results');
-  resultsDiv.innerHTML = '';  // Clear previous results
+        const resultsDiv = document.getElementById('results');
+        resultsDiv.innerHTML = '';  // Clear previous results
 
-  items.forEach(item => {
-    const div = document.createElement('div');
-    div.classList.add('result-item');
+        items.forEach(item => {
+            const div = document.createElement('div');
+            div.classList.add('result-item');
 
-    if (type === 'Student') {
-      div.innerHTML = `
-        <strong>Name:</strong> ${item.student_name} <br>
-        <strong>Group:</strong> ${item.student_group} <br>
-        <strong>Borrowed Books:</strong>
-        <ul>
+            if (type === 'Student') {
+                div.innerHTML = `
+                    <strong>Name:</strong> ${item.student_name} <br>
+                    <strong>Group:</strong> ${item.student_group} <br>
+                    <strong>Borrowed Books:</strong>
+                <ul>
           ${item.Checkouts.map(checkout => {
-            // Check if book data exists and is valid
-            const bookTitle = checkout.book_title || 'Unknown Book';
-            const bookAuthor = checkout.book_author || 'Unknown Author';
-            const dueDate = checkout.return_date || 'No due date';
-            return `<li>${bookTitle} by ${bookAuthor} (Due: ${dueDate})</li>`;
-          }).join('')}
-        </ul>
-      `;
-    } else if (type === 'Book') {
-      div.innerHTML = `
-        <strong>Title:</strong> ${item.book_title} <br>
-        <strong>Author:</strong> ${item.book_author} <br>
-        <strong>Students Who Borrowed:</strong>
-        <ul>
-          ${item.Checkouts.map(checkout => `
-            <li>${checkout.student_name} (Group: ${checkout.student_group}, Checkout Date: ${checkout.checkout_date}, Due Date: ${checkout.return_date})</li>
-          `).join('')}
-        </ul>
-      `;
+                // Check if book data exists and is valid
+                const bookTitle = checkout.book_title || 'Unknown Book';
+                const bookAuthor = checkout.book_author || 'Unknown Author';
+                const dueDate = checkout.return_date || 'No due date';
+                return `<li>${bookTitle} by ${bookAuthor} (Due: ${dueDate})</li>`;
+            }).join('')}
+            </ul>
+            `;
+            } else if (type === 'Book') {
+                div.innerHTML = `
+                    <strong>Title:</strong> ${item.book_title} <br>
+                    <strong>Author:</strong> ${item.book_author} <br>
+                    <strong>Students Who Borrowed:</strong>
+                    <ul>
+                    ${item.Checkouts.map(checkout => `
+                    <li>${checkout.student_name} (Group: ${checkout.student_group}, Checkout Date: ${checkout.checkout_date}, Due Date: ${checkout.return_date})</li>
+                    `).join('')}
+                    </ul>
+                `;
+            }
+            resultsDiv.appendChild(div);
+        });
     }
-
-    resultsDiv.appendChild(div);
-  });
-}
-
-
   </script>
 
 </body>
