@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    h1 { text-align: center; }
+    .container { margin: 20px auto; max-width: 400px; }
+    input { margin-bottom: 10px; padding: 10px; width: 100%; }
+    button { padding: 10px; width: 100%; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+    button:hover { background-color: #45a049; }
+    p { text-align: center; }
+  </style>
+</head>
+<body>
+
+  <h1>Library Login</h1>
+
+  <div class="container">
+    <h2>Log In</h2>
+    <input type="text" id="loginName" placeholder="Enter your name" required>
+    <input type="password" id="loginPassword" placeholder="Enter your password" required>
+    <button onclick="login()">Log In</button>
+
+    <p>Don't have an account? <a href="register.html">Register here</a></p>
+  </div>
+
+  <script>
+    function login() {
+      const name = document.getElementById("loginName").value.trim();
+      const password = document.getElementById("loginPassword").value.trim();
+
+      if (!name || !password) {
+        alert("Please enter both your name and password.");
+        return;
+      }
+
+      const users = JSON.parse(localStorage.getItem("users")) || [];
+      const user = users.find(u => u.name === name && u.password === password);
+
+      if (user) {
+        // Store the logged-in user in sessionStorage
+        sessionStorage.setItem("loggedInUser", JSON.stringify(user));
+        // Redirect to the main page (index.html)
+        window.location.href = "index.html";
+      } else {
+        alert("Invalid login credentials.");
+      }
+    }
+  </script>
+
+</body>
+</html>
