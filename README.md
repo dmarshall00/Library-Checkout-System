@@ -55,7 +55,7 @@ If you're not using Sequelize, ensure your database tables are set up manually b
 
 ### 5. Running the Application
 
-- **Create `.env` file**: Copy `.env.example` to `.env` and fill in the necessary values.
+- **Reminder!**: There is a line towards the beginning of the "LibraryMgmtmodels.js" file that requires the name of schema (library_mgmt), your database username (typically "root") and your password (the one you used to create an account with MySQL).
 
 Once the environment is set up, you can start the application by using Sequelize:
 
